@@ -1,9 +1,11 @@
 
-def prob1():
-    DIRS = [(0,1),(-1,0),(0,-1),(1,0)]
-   
+
+def prob1(switch):
+ 
+    ## Collect all the nodes
+    ## node(num,x,y)
     coords = []
-    with open("test.txt","r") as file:
+    with open("input.txt","r") as file:
         node_num = 0
         max_x = 0
         max_y = 0
@@ -22,59 +24,58 @@ def prob1():
             coords.append(coord)
             node_num += 1
     
-    print(max_x,max_y)
+    ## 2D array representing the map
+    ## map[y][x] 0,0 upper left
     map = [["" for j in range(max_x+2)] for i in range(max_y+1)]
+    ## Place the nodes in the map
     for node in coords:
-        #map[y][x]
-        map[node[2]][node[1]] = "|" + str(node[0])
-        
-        cx = node[1]
-        cy = node[2]
-        dist = 2
-        count = 1 # dist from current node
-        
-        done = False
-        while not done:
-            cx += 1
-            cy -= 1
-            
-            for dir in DIRS:
-                ind = 0
-                #print(dir)
-                while (ind < dist):
-                    
-                    cy += dir[1]
-                    cx += dir[0]
-                    #print(cx,cy)
-                    #print(max_x)
-                    if (cy <= max_y and cx <= max_x+1 and cy >= 0 and cx >= 0):
-                        if (map[cy][cx] == ""):
-                            map[cy][cx] = str(node[0]) + "-" + str(count)
-                        elif ("-" in map[cy][cx] and int(map[cy][cx].split("-")[1]) > count):
-                            map[cy][cx] = str(node[0]) + "-" + str(count)
-                        elif ("-" in map[cy][cx] and int(map[cy][cx].split("-")[1]) == count):
-                            map[cy][cx] = str(node[0]) + "x" + str(count)
-                        #elif ("x" in map[cy][cx] and int(map[cy][cx].split("x")[1]) > count):
-                        #    map[cy][cx] = str(node[0]) + "-" + str(count)
-                    
-                    
-                    
-                    ind += 1
-            for line in map:
-                print(line)
-            input()
-            dist += 2
-            count += 1
-            if count > max_x+1:
-                done = True
-        
-        
+        map[node[2]][node[1]] = "+" + str(node[0])
     
-            #input()
-    #for line in map:
-    #    print(line)
-    
+    ## Populate distances to square from each node
+    if (switch == "part1"):
+        for r in range(max_y+1):
+            for c in range(max_x+2):
+                dist = []
+                if (not "+" in map[r][c]):
+                    for node in coords:
+                        dist.append(abs(node[1] - c)+abs(node[2] - r))
+                        
+                    if dist.count(min(dist)) > 1:
+                        map[r][c] = "."
+                    else:
+                        map[r][c] = str(dist.index(min(dist)))
+                        
+                        
+        areas = [0 for x in range(len(coords))]
         
+        for r in range(max_y+1):
+            for c in range(max_x+2):
+                if ((r <= 0 or c <= 0 or r >= max_y or c >= max_x+1) and map[r][c] != "."):
+                    areas[int(map[r][c])] = -1
+                elif (map[r][c] != "." and areas[int(map[r][c])] != -1):
+                    areas[int(map[r][c])] += 1
+        return max(areas)
+    else:
+        total = 0
+        for r in range(max_y+1):
+            for c in range(max_x+2):
+                dist = 0
+
+                for node in coords:
+                    dist += (abs(node[1] - c)+abs(node[2] - r))
+                    
+                if dist < 10000:
+                    if not "+" in map[r][c]:
+                        map[r][c] = "#"
+                    total += 1
+                else:
+                    map[r][c] = "."
+                    
+        #for line in map:
+        #    print(line)      
+        return(total)
+                    
+
      
     
-prob1()
+print(prob1("part2"))

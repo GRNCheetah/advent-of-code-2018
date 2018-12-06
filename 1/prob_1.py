@@ -13,23 +13,23 @@ def prob1():
     
 def prob2():
     total = 0
-    freqs = []
-    count = 0
+    freqs = set()
+    
     while True:
         with open('input.txt','r') as file:    
             for line in file:
                 
-                if (line[0] == "+"):
-                    total += int(line[1:])
-                elif (line[0] == "-"):
-                    total -= int(line[1:])
+                total += int(line.strip())
+                #if (line[0] == "+"):
+                #    total += int(line[1:])
+                #elif (line[0] == "-"):
+                #    total -= int(line[1:])
             
                 if (int(total) in freqs):
                     return total
                 else:
-                    freqs.append(int(total))
-                    #print(total)
-        count += 1
+                    freqs.add(int(total))
+    
 
 print(prob2())
 
