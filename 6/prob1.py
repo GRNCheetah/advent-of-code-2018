@@ -1,11 +1,11 @@
 
 
-def prob1(switch):
+def prob1(switch, fin):
  
     ## Collect all the nodes
     ## node(num,x,y)
     coords = []
-    with open("input.txt","r") as file:
+    with open(fin,"r") as file:
         node_num = 0
         max_x = 0
         max_y = 0
@@ -57,6 +57,11 @@ def prob1(switch):
         return max(areas)
     else:
         total = 0
+        if (fin == "input.txt"):
+            MAX = 10000
+        elif (fin == "test.txt"):
+            MAX = 32
+        
         for r in range(max_y+1):
             for c in range(max_x+2):
                 dist = 0
@@ -64,7 +69,7 @@ def prob1(switch):
                 for node in coords:
                     dist += (abs(node[1] - c)+abs(node[2] - r))
                     
-                if dist < 10000:
+                if dist < MAX:
                     if not "+" in map[r][c]:
                         map[r][c] = "#"
                     total += 1
@@ -78,4 +83,4 @@ def prob1(switch):
 
      
     
-print(prob1("part2"))
+print(prob1("part2", "input.txt"))
